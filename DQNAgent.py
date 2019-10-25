@@ -19,13 +19,13 @@ class DQNAgent:
 	# Create DQN model using Keras
 	def createModel(self, weights):
 		model = Sequential()
-		model.add(Dense(24, input_dim=8, activation='relu'))
-		model.add(Dropout(0.2))
-		model.add(Dense(16, activation='relu'))
-		model.add(Dropout(0.2))
-		model.add(Dense(8, activation='relu'))
-		model.add(Dropout(0.2))
-		model.add(Dense(3, activation='softmax'))
+		model.add(Dense(30, input_dim=7, activation='relu'))
+		model.add(Dropout(0.15))
+		model.add(Dense(30, activation='relu'))
+		model.add(Dropout(0.15))
+		model.add(Dense(90, activation='relu'))
+		model.add(Dropout(0.15))
+		model.add(Dense(3, activation='linear'))
 		model.compile(loss='mse', optimizer=Adam(lr=Parameters.ALPHA))
 		if weights:
 			model.load_weights(weights)
@@ -40,26 +40,30 @@ class DQNAgent:
 		if done:
 			q_value = reward
 		else:
-			q_value = reward + Parameters.GAMMA * np.amax(self.model.predict(next_state.reshape((1, 8)))[0])
-		q_table = self.model.predict(state.reshape((1, 8)))
+			q_value = reward + Parameters.GAMMA * np.amax(self.model.predict(next_state.reshape((1, 7)))[0])
+		q_table = self.model.predict(state.reshape((1, 7)))
 		q_table[0][np.argmax(action)] = q_value
-		self.model.fit(state.reshape((1, 8)), q_table, epochs=1, verbose=0)
-		self.addToMemory(state, action, reward, next_state, done)
+		self.model.fit(state.reshape((1, 7)), q_table, epochs=1, verbose=0)
+		self.addToMemory(state, action, reward, next_state, done)		
 
 	# Train the network using memory
 	def batchTraining(self):
-		batch = self.memory
+		print("\n", len(self.memory))
+		if len(self.memory) > 500:
+			batch = random.sample(self.memory, 500)
+		else:
+			batch = self.memory
 		for state, action, reward, next_state, done in batch:
 			if done:
 				q_value = reward
 			else:
-				q_value = reward + Parameters.GAMMA * np.amax(self.model.predict(np.array([next_state]))[0])
-			q_table = self.model.predict(np.array([state]))
+				q_value = (reward + Parameters.GAMMA * np.amax(self.model.predict(next_state.reshape(1, 7))[0]))
+			q_table = self.model.predict(state.reshape(1, 7))
 			q_table[0][np.argmax(action)] = q_value
-			self.model.fit(np.array([state]), q_table, epochs=1, verbose=0)
+			self.model.fit(state.reshape(1, 7), q_table, epochs=1, verbose=0)
 
 	def getAction(self, old_state, random_value=None):
 		if random_value:
-			return to_categorical(random.randint(0, 2), num_classes=3)
-		action = self.model.predict(old_state.reshape(1, 8))
-		return to_categorical(np.argmax(action[0]), num_classes=3)
+			return random.randint(0, 2)
+		action = self.model.predict(old_state.reshape(1, 7))
+		return np.argmax(action[0])

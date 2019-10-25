@@ -22,7 +22,7 @@ class State:
 	'''
 	@staticmethod
 	def getState(gameEngine):
-		state = [0, 0, 0, 0, 0, 0, 0, 0]
+		state = [0, 0, 0, 0, 0, 0, 0]
 		x_head, y_head = gameEngine.find(Parameters.OBJ_HEAD)
 
 		# Wall in the cell near Snake's head
@@ -80,7 +80,7 @@ class State:
 				state[2] = 1
 
 		# Relative position of the fruit with respect to the head
-		x_fruit, y_fruit = gameEngine.find(Parameters.OBJ_FRUIT)
+		x_fruit, y_fruit = gameEngine.find(Parameters.OBJ_FRUIT)	
 		if y_fruit > y_head:    # If True the fruit is downward with respect to the head
 			state[6] = 1#fruit down
 		else:
@@ -89,13 +89,15 @@ class State:
 			state[5] = 1  # right
 		else:
 			state[4] = 1#left
+		'''
 		if gameEngine.direction == "up":
-			state[7] = 0
+			state[5] = 0
 		elif gameEngine.direction == "left":
-			state[7] = 1
+			state[5] = 1
 		elif gameEngine.direction == "right":
-			state[7] = 2
+			state[5] = 2
 		elif gameEngine.direction == "down":
-			state[7] = 3
+			state[5] = 3
+		'''
 		# Return state
 		return np.asarray(state)

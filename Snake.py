@@ -14,7 +14,7 @@ class Snake:
 
 	def __init__(self):
 		self.engine = GameEngine()
-		self.EPOCHS = 80
+		self.EPOCHS = 1000
 		self.resultsDF = pd.DataFrame(columns=['EPOCH', 'POINTS', 'REWARD'])
 
 	def playQNAgent(self, path=None, graphics=None):
@@ -62,7 +62,41 @@ class Snake:
 		agent = DQNAgent(weights)
 		epsilon = Parameters.EPSILON_MAX
 		if graphics:
-			print("not yet")
+			from UserGraphic import UserGraphic
+			graphic = UserGraphic()
+			for i in range(0, self.EPOCHS):
+				points = 0  # Sum of points
+				tot_reward = 0  # Sum of rewards
+				self.engine.newGame()
+				game_over = False
+				while not game_over:
+					old_state = State.getState(self.engine)	# Get actual state
+					# Choose action with epsilon-greedy policy
+					if random.random() < epsilon:
+						action = agent.getAction(old_state, random_value=1)
+					else:
+						action = agent.getAction(old_state)
+					reward = self.engine.executeAction(action)	# Execute action and get reward
+					new_state = State.getState(self.engine)	# Get new state
+					# Update sum rewards and points
+					tot_reward += reward
+					if reward == Parameters.REWARD_LOSE:
+						game_over = True
+					elif reward == Parameters.REWARD_FRUIT:
+						points += 1
+					# Train Agent
+					agent.addToMemory(old_state, action, reward, new_state, game_over)
+					graphic.draw(self.engine.playground)
+				# Update epsilon value
+				if epsilon > Parameters.EPSILON_MIN:
+					epsilon -= Parameters.EPSILON_DECREASE
+				else:
+					epsilon = Parameters.EPSILON_MIN
+				# Train agent using memory
+				agent.batchTraining()
+				self.addToDF(i, points, tot_reward, 'DQNresults.csv')
+				self.progress(i)
+			graphic.close()
 		else:
 			for i in range(0, self.EPOCHS):
 				points = 0  # Sum of points

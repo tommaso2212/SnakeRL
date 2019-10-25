@@ -23,9 +23,9 @@ class Parameters:
 		-1 - death
 		-0.1 - else
 	'''
-	REWARD_FRUIT = 1
-	REWARD_LOSE = -1
-	REWARD_ELSE = -0.01
+	REWARD_FRUIT = 5
+	REWARD_LOSE = -5
+	REWARD_ELSE = -1
 	'''
 	Actions:
 		0 - straight movement
@@ -38,11 +38,11 @@ class Parameters:
 	'''
 	Q Learning parameters
 	'''
-	GAMMA = 0.9  # Discount factor
-	ALPHA = 0.01   # Learning rate
+	GAMMA = 0.95  # Discount factor
+	ALPHA = 0.001   # Learning rate
 	'''
 	Epsilon greedy policy
 	'''
-	EPSILON_MAX = 0.5   
+	EPSILON_MAX = 0.4   
 	EPSILON_MIN = 0.1
-	EPSILON_DECREASE = 0.05
+	EPSILON_DECREASE = 0.005
