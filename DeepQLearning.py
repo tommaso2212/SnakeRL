@@ -19,28 +19,26 @@ class DeepQLearning:
     # Create model
     def createModel(self, weights):
         model = Sequential()
-        '''
-        1
-        '''
-        model.add(Dense(10, input_dim = 6, activation='relu'))
-        model.add(Dense(4, activation='softmax'))
-        model.compile(loss='mse', optimizer=Adam(lr=par.ALPHA))
-        '''
-        2
+        
+        #1
+        #model.add(Dense(10, input_dim = 6, activation='relu'))
+        #model.add(Dense(4, activation='softmax'))
+        #model.compile(loss='mse', optimizer=Adam(lr=par.ALPHA))
+
+        # 2
         model.add(Dense(12, input_dim = 6, activation='relu'))
-        model.add(Dense(8, activation='relu))
-        model.add(Dense(4, activation='softmax'))
-        '''
-        '''
-        3
-        model.add(Dense(60, input_dim = 6, activation='relu'))
-        model.add(Dropout(0.2))
-        model.add(Dense(60, activation='relu))
-        model.add(Dropout(0.2))
-        model.add(Dense(60, activation='relu))
-        model.add(Dropout(0.2))
-        model.add(Dense(4, activation='softmax'))
-        '''
+        model.add(Dense(8, activation='relu'))
+	model.add(Dense(4, activation='softmax'))
+        
+	
+        #3
+        #model.add(Dense(60, input_dim = 6, activation='relu'))
+        #model.add(Dropout(0.2))
+        #model.add(Dense(60, activation='relu))
+        #model.add(Dropout(0.2))
+        #model.add(Dense(60, activation='relu))
+        #model.add(Dropout(0.2))
+        #model.add(Dense(4, activation='softmax'))
 
         model.compile(loss='mse', optimizer=Adam(lr=par.ALPHA))
         if weights:
@@ -63,7 +61,6 @@ class DeepQLearning:
             else:
                 q_value = (reward + par.GAMMA * np.amax(self.model.predict(new_state.reshape(1,6))[0]))
             q_table = self.model.predict(old_state.reshape(1,6))[0]
-            print(q_table)
             q_table[np.argmax(action)] = q_value
             self.model.fit(old_state.reshape(1,6), q_table.reshape(1,4), epochs=1, verbose=0)
     

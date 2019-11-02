@@ -12,7 +12,7 @@ import sys
 class Snake:
     def __init__(self):
         self.engine = GameEngine()
-        self.EPOCHS = 10000  # Number of matches
+        self.EPOCHS = 100000  # Number of matches
         self.resultsDF = pd.DataFrame(columns=['EPOCH', 'POINTS', 'REWARD'])
 
     # Print progress
@@ -103,7 +103,7 @@ class Snake:
                 epsilon = par.EPSILON_MIN
             self.progress(i)
             self.resultsDF = self.resultsDF.append({'EPOCH': i, 'POINTS': points, 'REWARD': tot_reward}, ignore_index=True)
-            self.resultsDF.to_csv(r"DQNresults1.csv")
+            self.resultsDF.to_csv(r"DQNresults2.csv")
         if userView:
             graphic.close()
         agent.saveTable()   
