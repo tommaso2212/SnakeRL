@@ -5,6 +5,7 @@
 from Parameters import Parameters as par
 import random
 import numpy as np
+from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import Adam
@@ -13,33 +14,15 @@ from keras.utils import to_categorical
 class DeepQLearning:
 
     def __init__(self, weights=None):
-        self.memory = []
+        self.memory = deque(maxlen=2000)
         self.model = self.createModel(weights)
 
     # Create model
     def createModel(self, weights):
         model = Sequential()
-        
-        #1
-        #model.add(Dense(10, input_dim = 6, activation='relu'))
-        #model.add(Dense(4, activation='softmax'))
-        #model.compile(loss='mse', optimizer=Adam(lr=par.ALPHA))
-
-        # 2
-        model.add(Dense(12, input_dim = 6, activation='relu'))
-        model.add(Dense(8, activation='relu'))
-	model.add(Dense(4, activation='softmax'))
-        
-	
-        #3
-        #model.add(Dense(60, input_dim = 6, activation='relu'))
-        #model.add(Dropout(0.2))
-        #model.add(Dense(60, activation='relu))
-        #model.add(Dropout(0.2))
-        #model.add(Dense(60, activation='relu))
-        #model.add(Dropout(0.2))
-        #model.add(Dense(4, activation='softmax'))
-
+        model.add(Dense(64, input_dim = 6, activation='relu'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(4, activation='softmax'))
         model.compile(loss='mse', optimizer=Adam(lr=par.ALPHA))
         if weights:
             model.load_weights(weights)
@@ -51,8 +34,8 @@ class DeepQLearning:
 
     # Train the model using minibatch
     def minibatchTraining(self):
-        if len(self.memory) > 2000:
-            minibatch = random.sample(self.memory, 2000)
+        if len(self.memory) > 64:
+            minibatch = random.sample(self.memory, 10)
         else:
             minibatch = self.memory
         for old_state, action, reward, new_state, game_over in minibatch:

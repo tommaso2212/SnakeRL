@@ -25,7 +25,7 @@ class UserView:
         # Update display
 		pygame.display.flip()
         # Delay
-		#time.sleep(0.5)
+		#time.sleep(1)
 	
 	def drawItem(self, obj, x, y):
 		if obj == par.OBJ_FRUIT:    # Draw fruit (red quad)

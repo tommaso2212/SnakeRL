@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-dt = pd.read_csv(r"QNresults.csv")
+dt = pd.read_csv(r"DQNresults.csv")
 
 print(dt.describe())
 
